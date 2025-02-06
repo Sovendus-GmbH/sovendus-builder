@@ -1,6 +1,6 @@
 {
     "name": "sovendus-builder",
-    "version": "1.0.4",
+    "version": "1.0.6",
     "main": "dist/build.js",
     "types": "dist/config.d.ts",
     "bin": {
@@ -16,6 +16,7 @@
         "@vitejs/plugin-react": "^1.0.0",
         "autoprefixer": "^10.0.0",
         "commander": "^7.0.0",
+        "fs-extra": "^11.3.0",
         "postcss": "^8.5.1",
         "tailwindcss": "^3.0.0",
         "ts-node": "^10.9.2",
@@ -23,6 +24,7 @@
     },
     "devDependencies": {
         "@types/autoprefixer": "^10.2.4",
+        "@types/fs-extra": "^11.0.4",
         "@types/node": "^22.13.1",
         "@types/react": "^19.0.8",
         "@types/react-dom": "^19.0.3",

@@ -3,8 +3,9 @@
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import { Command } from "commander";
-import { existsSync, rmSync } from "fs";
-import { basename, resolve } from "path";
+import { existsSync, mkdirSync, rmSync } from "fs";
+import { copy } from "fs-extra";
+import { basename, dirname, resolve } from "path";
 import type { Plugin } from "postcss";
 import tailwindcss from "tailwindcss";
 import { register } from "ts-node";
@@ -38,60 +39,85 @@ program
       .default;
 
     await compileToJsFilesWithVite(buildConfig);
+    await copyFiles(buildConfig);
   });
 
 export async function compileToJsFilesWithVite(
   buildConfig: BuildConfig,
 ): Promise<void> {
-  await Promise.all(
-    buildConfig.filesToCompile.map(async (fileConfig) => {
-      if (!existsSync(fileConfig.input)) {
-        throw new Error(`Input file ${fileConfig.input} does not exist`);
-      }
+  if (buildConfig.filesToCompile) {
+    await Promise.all(
+      buildConfig.filesToCompile.map(async (fileConfig) => {
+        if (!existsSync(fileConfig.input)) {
+          throw new Error(`Input file ${fileConfig.input} does not exist`);
+        }
 
-      const plugins = [];
-      const cssPlugins: Plugin[] = [];
+        const plugins = [];
+        const cssPlugins: Plugin[] = [];
 
-      if (fileConfig.options?.type === "react-tailwind") {
-        plugins.push(react());
+        if (fileConfig.options?.type === "react-tailwind") {
+          plugins.push(react());
 
-        cssPlugins.push(
-          tailwindcss as unknown as Plugin,
-          autoprefixer as unknown as Plugin,
-        );
-      }
+          cssPlugins.push(
+            tailwindcss as unknown as Plugin,
+            autoprefixer as unknown as Plugin,
+          );
+        } else if (fileConfig.options?.type === "react") {
+          plugins.push(react());
+        }
 
-      await build({
-        root: "./",
-        base: "./",
-        plugins,
-        css: {
-          postcss: {
-            plugins: cssPlugins,
-          },
-        },
-        build: {
-          target: "es6",
-          outDir: resolve(fileConfig.output, ".."),
-          minify: false,
-          emptyOutDir: false,
-          cssCodeSplit: true,
-          sourcemap: true,
-          ...fileConfig.options?.buildOptions,
-          rollupOptions: {
-            input: fileConfig.input,
-            output: {
-              entryFileNames: basename(fileConfig.output),
-              assetFileNames: "[name][extname]",
-              exports: "none",
-              format: "iife",
+        await build({
+          root: "./",
+          base: "./",
+          plugins,
+          css: {
+            postcss: {
+              plugins: cssPlugins,
             },
-            ...fileConfig.options?.rollupOptions,
           },
-        },
-      });
-    }),
-  );
+          build: {
+            target: "es6",
+            outDir: resolve(fileConfig.output, ".."),
+            minify: false,
+            emptyOutDir: false,
+            cssCodeSplit: true,
+            sourcemap: true,
+            ...fileConfig.options?.buildOptions,
+            rollupOptions: {
+              input: fileConfig.input,
+              output: {
+                entryFileNames: basename(fileConfig.output),
+                assetFileNames: "[name][extname]",
+                exports: "none",
+                format: "iife",
+              },
+              ...fileConfig.options?.rollupOptions,
+            },
+          },
+        });
+      }),
+    );
+  } else {
+    // eslint-disable-next-line no-console
+    console.log("No files to compile in your config");
+  }
+}
+
+export async function copyFiles(buildConfig: BuildConfig): Promise<void> {
+  if (buildConfig.filesOrFoldersToCopy) {
+    for (const fileOrFolderData of buildConfig.filesOrFoldersToCopy) {
+      const destDir = dirname(fileOrFolderData.output);
+      if (!existsSync(destDir)) {
+        mkdirSync(destDir, { recursive: true });
+      }
+      await copy(fileOrFolderData.input, fileOrFolderData.output);
+    }
+    // eslint-disable-next-line no-console
+    console.log("Files copied successfully");
+  } else {
+    // eslint-disable-next-line no-console
+    console.log("No files to copy in your config");
+  }
 }
 
 export function cleanDistFolder(distDir: string): void {
