@@ -35,4 +35,14 @@ export default config;
 
 ## Building
 
-this project uses deno to build, make sur eto install it first <https://docs.deno.com/runtime/>
+```bash
+yarn build
+```
+
+## Publishing
+
+Use the <techsupport@sovendus.com> npmjs account and run
+
+```bash
+npm run release
+```

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import react from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import { Command } from "commander";
@@ -5,9 +7,18 @@ import { existsSync, rmSync } from "fs";
 import { basename, resolve } from "path";
 import type { Plugin } from "postcss";
 import tailwindcss from "tailwindcss";
+import { register } from "ts-node";
 import { build } from "vite";
 
 import type { BuildConfig } from "./config";
+
+// Register ts-node to handle TypeScript files
+register({
+  transpileOnly: true,
+  compilerOptions: {
+    module: "commonjs",
+  },
+});
 
 const program = new Command();
 
