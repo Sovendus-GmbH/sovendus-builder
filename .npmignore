@@ -1,0 +1,18 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore test files
+src/build.test.ts
+test-files/
+
+# Ignore configuration files
+tsconfig.json
+tsconfig-build.json
+.vscode/
+.eslintrc.json
+.prettier.config.js
+.vitest.config.ts
+
+# Ignore other unnecessary files
+.git/
+.gitignore
