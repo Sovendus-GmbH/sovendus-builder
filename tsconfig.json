@@ -2,7 +2,9 @@
   "compilerOptions": {
     "jsx": "react",
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": true,
     "skipLibCheck": true,
     "types": ["node"],
     "noEmitOnError": true,

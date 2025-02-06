@@ -7,6 +7,7 @@
         "sov-build": "dist/build.js"
     },
     "private": false,
+    "type": "module",
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig-build.json",
         "test": "vitest",
@@ -20,6 +21,7 @@
         "postcss": "^8.5.1",
         "tailwindcss": "^4.0.4",
         "ts-node": "^10.9.2",
+        "@tailwindcss/vite": "^4.0.4",
         "vite": "^6.1.0"
     },
     "devDependencies": {

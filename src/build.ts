@@ -1,17 +1,16 @@
 #!/usr/bin/env node
 
 import react from "@vitejs/plugin-react";
-import autoprefixer from "autoprefixer";
 import { Command } from "commander";
 import { existsSync, mkdirSync, rmSync } from "fs";
 import { copy } from "fs-extra";
 import { basename, dirname, resolve } from "path";
-import type { Plugin } from "postcss";
-import tailwindcss from "tailwindcss";
+
+import tailwindcss from "@tailwindcss/vite";
 import { register } from "ts-node";
 import { build } from "vite";
 
-import type { BuildConfig } from "./config";
+import type { BuildConfig } from "./config.ts";
 
 // Register ts-node to handle TypeScript files
 register({
@@ -53,15 +52,10 @@ export async function compileToJsFilesWithVite(
         }
 
         const plugins = [];
-        const cssPlugins: Plugin[] = [];
 
         if (fileConfig.options?.type === "react-tailwind") {
           plugins.push(react());
-
-          cssPlugins.push(
-            tailwindcss as unknown as Plugin,
-            autoprefixer as unknown as Plugin,
-          );
+          plugins.push(tailwindcss());
         } else if (fileConfig.options?.type === "react") {
           plugins.push(react());
         }
@@ -70,11 +64,6 @@ export async function compileToJsFilesWithVite(
           root: "./",
           base: "./",
           plugins,
-          css: {
-            postcss: {
-              plugins: cssPlugins,
-            },
-          },
           build: {
             target: "es6",
             outDir: resolve(fileConfig.output, ".."),
