@@ -10,7 +10,7 @@
     "scripts": {
         "build": "tsc -p tsconfig-build.json",
         "test": "vitest",
-        "release": "yarn build && npm publish --access public"
+        "release": "yarn test run && yarn build && npm publish --access public"
     },
     "dependencies": {
         "@vitejs/plugin-react": "^1.0.0",
