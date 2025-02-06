@@ -1,6 +1,6 @@
 {
     "name": "sovendus-builder",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "main": "dist/build.js",
     "types": "dist/config.d.ts",
     "bin": {
@@ -8,7 +8,7 @@
     },
     "private": false,
     "scripts": {
-        "build": "tsc -p tsconfig-build.json",
+        "build": "rm -rf ./dist && tsc -p tsconfig-build.json",
         "test": "vitest",
         "release": "yarn test run && yarn build && npm publish --access public"
     },
