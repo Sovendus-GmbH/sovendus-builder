@@ -5,20 +5,10 @@ import { Command } from "commander";
 import { existsSync, mkdirSync, rmSync } from "fs";
 import { copy } from "fs-extra";
 import { basename, dirname, resolve } from "path";
+import { build, PluginOption } from "vite";
 
 import tailwindcss from "@tailwindcss/vite";
-import { register } from "ts-node";
-import { build } from "vite";
-
-import type { BuildConfig } from "./config.ts";
-
-// Register ts-node to handle TypeScript files
-register({
-  transpileOnly: true,
-  compilerOptions: {
-    module: "commonjs",
-  },
-});
+import type { BuildConfig } from "./config.js";
 
 const program = new Command();
 
@@ -28,7 +18,7 @@ program
   .option(
     "-c, --config <path>",
     "specify the config file path",
-    "sov_build.config.ts",
+    "sov_build.config.js",
   )
   .action(async (options: { config: string }) => {
     // eslint-disable-next-line no-console
@@ -36,7 +26,7 @@ program
     const configPath = resolve(process.cwd(), options.config);
     const buildConfig = ((await import(configPath)) as { default: BuildConfig })
       .default;
-
+    cleanDistFolders(buildConfig);
     await compileToJsFilesWithVite(buildConfig);
     await copyFiles(buildConfig);
   });
@@ -51,7 +41,7 @@ export async function compileToJsFilesWithVite(
           throw new Error(`Input file ${fileConfig.input} does not exist`);
         }
 
-        const plugins = [];
+        const plugins: PluginOption[] = [];
 
         if (fileConfig.options?.type === "react-tailwind") {
           plugins.push(react());
@@ -79,10 +69,12 @@ export async function compileToJsFilesWithVite(
                 assetFileNames: "[name][extname]",
                 exports: "none",
                 format: "iife",
+                ...fileConfig.options.outputOptions,
               },
               ...fileConfig.options?.rollupOptions,
             },
           },
+          ...fileConfig.options.otherOptions,
         });
       }),
     );
@@ -109,14 +101,21 @@ export async function copyFiles(buildConfig: BuildConfig): Promise<void> {
   }
 }
 
-export function cleanDistFolder(distDir: string): void {
-  try {
-    rmSync(distDir, { force: true, recursive: true });
+export function cleanDistFolders(buildConfig: BuildConfig): void {
+  if (buildConfig.foldersToClean) {
+    buildConfig.foldersToClean.forEach((folder) => {
+      try {
+        rmSync(folder, { force: true, recursive: true });
+        // eslint-disable-next-line no-console
+        console.log(`Done dist folder cleaning (${folder})`);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        /* empty */
+      }
+    });
+  } else {
     // eslint-disable-next-line no-console
-    console.log(`Done dist folder cleaning (${distDir})`);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    /* empty */
+    console.log("No folders to clean in your config");
   }
 }
 

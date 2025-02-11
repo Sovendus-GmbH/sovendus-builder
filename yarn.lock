@@ -3200,7 +3200,7 @@ rollup@^4.23.0:
     "@rollup/rollup-win32-x64-msvc" "4.34.2"
     fsevents "~2.3.2"
 
-rollup@^4.30.1:
+rollup@^4.30.1, rollup@^4.34.4:
   version "4.34.4"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-4.34.4.tgz#b87a08a0c158e2f9d12bcd876221ef717ffa6bc2"
   integrity sha512-spF66xoyD7rz3o08sHP7wogp1gZ6itSq22SGa/IZTcUDXDlOyrShwMwkVSB+BUxFRZZCUYqdb3KWDEOMVQZxuw==

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "jsx": "react",
     "target": "ESNext",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "nodenext",
     "skipLibCheck": true,
     "types": ["node"],
     "outDir": "dist",

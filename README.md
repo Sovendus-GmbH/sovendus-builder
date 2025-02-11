@@ -10,6 +10,7 @@ create a file called "sov_build.config.ts" in your project root with the followi
 import type { BuildConfig } from "sovendus-builder";
 
 const config: BuildConfig = {
+  foldersToClean: ["./dist"],
   filesToCompile: [
     {
       input: "./src/input.ts",

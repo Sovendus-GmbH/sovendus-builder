@@ -1,6 +1,8 @@
-import type { BuildOptions, RollupCommonJSOptions } from "vite";
+import { OutputOptions } from "rollup";
+import type { BuildOptions, InlineConfig, RollupCommonJSOptions } from "vite";
 
 export interface BuildConfig {
+  foldersToClean?: string[];
   filesToCompile?: {
     input: string;
     output: string;
@@ -8,6 +10,8 @@ export interface BuildConfig {
       type: "react-tailwind" | "react" | "vanilla";
       buildOptions?: BuildOptions;
       rollupOptions?: RollupCommonJSOptions;
+      otherOptions?: InlineConfig
+      outputOptions?: OutputOptions
     };
   }[];
   filesOrFoldersToCopy?: {
