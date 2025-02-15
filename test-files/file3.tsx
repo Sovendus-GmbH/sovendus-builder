@@ -1,6 +1,7 @@
+import "./test3.css";
+
 import React from "react";
 import ReactDOM from "react-dom";
-import "./test3.css";
 
 const App = (): React.JSX.Element => <div>Hello from input3.ts</div>;
 

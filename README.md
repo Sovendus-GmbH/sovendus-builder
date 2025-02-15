@@ -6,7 +6,7 @@
 
 create a file called "sov_build.config.ts" in your project root with the following content
 
-```tsx
+```ts
 import type { BuildConfig } from "sovendus-builder";
 
 const config: BuildConfig = {
@@ -34,7 +34,7 @@ export default config;
 
 ```
 
-## Building
+## Building from source
 
 ```bash
 yarn build
@@ -42,7 +42,7 @@ yarn build
 
 ## Publishing
 
-Use the <techsupport@sovendus.com> npmjs account and run
+Use your npmjs account and run
 
 ```bash
 npm run release

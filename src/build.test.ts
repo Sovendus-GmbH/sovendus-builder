@@ -1,48 +1,15 @@
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { describe, expect, it, beforeAll, afterAll } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { copyDir } from "../test-files/test-config.js";
 import {
   cleanDistFolders,
-  compileToJsFilesWithVite,
-  copyFiles,
+  getConfigContent,
+  sovendusBuilder,
 } from "./build.js";
-import type { BuildConfig } from "./config.js";
 
 const testDir = resolve(__dirname, "../test-files");
-const distDir = resolve(testDir, "dist");
-const copyDir = resolve(testDir, "dist/copy");
-
-const buildConfig: BuildConfig = {
-  foldersToClean: [distDir],
-  filesToCompile: [
-    {
-      input: resolve(testDir, "file1.ts"),
-      output: resolve(distDir, "output1.js"),
-      options: { type: "vanilla" },
-    },
-    {
-      input: resolve(testDir, "file2.tsx"),
-      output: resolve(distDir, "output2.js"),
-      options: { type: "react" },
-    },
-    {
-      input: resolve(testDir, "file3.tsx"),
-      output: resolve(distDir, "output3.js"),
-      options: { type: "react-tailwind" },
-    },
-  ],
-  filesOrFoldersToCopy: [
-    {
-      input: resolve(testDir, "file1.ts"),
-      output: resolve(copyDir, "file1.ts"),
-    },
-    {
-      input: resolve(testDir, "folderToCopy"),
-      output: resolve(copyDir, "folderToCopy"),
-    },
-  ],
-};
 
 beforeAll(() => {
   // Create a folder and a file to copy
@@ -63,31 +30,41 @@ afterAll(() => {
 
 describe("Build Functionality", () => {
   it("should compile files with Vite and clean the dist folder", async () => {
-    await compileToJsFilesWithVite(buildConfig);
+    const options = {
+      config: resolve(testDir, "test-config.ts"),
+    };
+    await sovendusBuilder(options);
+
+    const buildConfig = await getConfigContent(options);
 
     // Check if output files exist
     buildConfig.filesToCompile!.forEach((file) => {
       expect(existsSync(file.output)).toBe(true);
     });
 
-    // Clean dist folder
-    cleanDistFolders(buildConfig);
-
-    // Check if dist folder was cleaned
-    expect(street).toBe("streetname");
-    expect(number).toBe("streetname");
+    // Check if the files were copied
+    buildConfig.filesOrFoldersToCopy!.forEach((fileOrFolderData) => {
+      expect(existsSync(fileOrFolderData.output)).toBe(true);
+    });
   });
 
-  it("should copy files and folders", async () => {
-    await copyFiles(buildConfig);
+  it("should clean the clean folders before build", async () => {
+    // build something to delete
+    const initialStateOptions = {
+      config: resolve(testDir, "test-config.ts"),
+    };
+    await sovendusBuilder(initialStateOptions);
 
-    // Check if the file was copied
-    expect(existsSync(resolve(copyDir, "file1.ts"))).toBe(true);
+    // delete the dist folder
+    const options = {
+      config: resolve(testDir, "test-delete-config.ts"),
+    };
+    const buildConfig = await getConfigContent(options);
+    await sovendusBuilder(options);
 
-    // Check if the folder and its contents were copied
-    expect(existsSync(resolve(copyDir, "folderToCopy"))).toBe(true);
-    expect(
-      existsSync(resolve(copyDir, "folderToCopy", "fileInFolder.ts")),
-    ).toBe(true);
+    // Check if dist folder was cleaned
+    buildConfig.foldersToClean!.forEach((folderToClean) => {
+      expect(existsSync(folderToClean)).toBe(false);
+    });
   });
 });

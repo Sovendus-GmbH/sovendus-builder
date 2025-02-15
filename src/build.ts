@@ -1,16 +1,20 @@
 #!/usr/bin/env node
 
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { Command } from "commander";
-import { existsSync, mkdirSync, rmSync } from "fs";
+import { existsSync, mkdirSync, rmSync, unlinkSync } from "fs";
 import { copy } from "fs-extra";
-import { basename, dirname, resolve } from "path";
-import { build, PluginOption } from "vite";
+import { basename, dirname, join, resolve } from "path";
+import type { PluginOption } from "vite";
+import { build } from "vite";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-import tailwindcss from "@tailwindcss/vite";
 import type { BuildConfig } from "./config.js";
 
 const program = new Command();
+
+export type CliOptions = { config: string };
 
 program
   .command("build")
@@ -18,18 +22,20 @@ program
   .option(
     "-c, --config <path>",
     "specify the config file path",
-    "sov_build.config.js",
+    "sov_build.config.ts",
   )
-  .action(async (options: { config: string }) => {
-    // eslint-disable-next-line no-console
-    console.log("Building started");
-    const configPath = resolve(process.cwd(), options.config);
-    const buildConfig = ((await import(configPath)) as { default: BuildConfig })
-      .default;
-    cleanDistFolders(buildConfig);
-    await compileToJsFilesWithVite(buildConfig);
-    await copyFiles(buildConfig);
+  .action(async (options: CliOptions) => {
+    await sovendusBuilder(options);
   });
+
+export async function sovendusBuilder(options: CliOptions): Promise<void> {
+  // eslint-disable-next-line no-console
+  console.log("Sovendus-Builder started");
+  const buildConfig = await getConfigContent(options);
+  cleanDistFolders(buildConfig);
+  await compileToJsFilesWithVite(buildConfig);
+  await copyFiles(buildConfig);
+}
 
 export async function compileToJsFilesWithVite(
   buildConfig: BuildConfig,
@@ -81,6 +87,53 @@ export async function compileToJsFilesWithVite(
   } else {
     // eslint-disable-next-line no-console
     console.log("No files to compile in your config");
+  }
+}
+
+export async function getConfigContent(
+  options: CliOptions,
+): Promise<BuildConfig> {
+  const configSourcePath = resolve(process.cwd(), options.config);
+  const compiledConfigPath = await getCompiledConfigPath(configSourcePath);
+  const buildConfig = (
+    (await import(compiledConfigPath)) as { default: BuildConfig }
+  ).default;
+  cleanCompiledConfig(compiledConfigPath);
+  return buildConfig;
+}
+
+function cleanCompiledConfig(compiledConfigPath: string): void {
+  unlinkSync(compiledConfigPath);
+}
+
+export async function getCompiledConfigPath(
+  configPath: string,
+): Promise<string> {
+  const outputFileName = `sov_build.config.tmp.${Math.round(Math.random() * 100000)}.js`;
+  const outputDir = dirname(configPath);
+  const outputFilePath = join(outputDir, outputFileName);
+  try {
+    await build({
+      plugins: [
+        nodePolyfills({
+          exclude: ["fs"],
+        }),
+      ],
+      build: {
+        lib: {
+          entry: configPath,
+          formats: ["cjs"],
+          fileName: () => outputFileName,
+        },
+        outDir: outputDir,
+        emptyOutDir: false,
+      },
+    });
+    return outputFilePath;
+  } catch (error) {
+    // Clean up in case of an error
+    unlinkSync(outputFilePath);
+    throw error;
   }
 }
 

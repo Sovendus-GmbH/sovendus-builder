@@ -1,18 +1,51 @@
 {
     "name": "sovendus-builder",
-    "version": "1.0.17",
+    "description": "An all-in-one build/bundle tool based on vite and rollup. Build anything from vanilla js to typescript react.",
+    "version": "1.1.0",
     "main": "dist/build.js",
     "types": "dist/config.d.ts",
+    "license": "MIT",
     "bin": {
-        "sov-build": "dist/build.js"
+        "sov-build": "dist/build.js",
+        "sovendus-builder": "dist/build.js"
     },
     "private": false,
     "type": "module",
+    "exports": {
+        ".": {
+            "import": "./dist/build.js",
+            "require": "./dist/build.js"
+        },
+        "./src/*": "./src/*",
+        "./dist/*": "./dist/*"
+    },
     "scripts": {
         "build": "rm -rf ./dist && tsc -p tsconfig-build.json",
+        "lint": "eslint src --fix",
         "test": "vitest",
         "release": "vitest run && yarn build && npm publish --access public"
     },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Sovendus-GmbH/sovendus-builder.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Sovendus-GmbH/sovendus-builder/issues"
+    },
+    "homepage": "https://github.com/Sovendus-GmbH/sovendus-builder#readme",
+    "keywords": [
+        "build",
+        "bundle",
+        "vite",
+        "rollup"
+    ],
+    "author": "Marcus Brandstaetter <techsupport@sovendus.com>",
+    "contributors": [
+        {
+            "name": "Marcus Brandstaetter - Sovendus GmbH",
+            "email": "techsupport@sovendus.com"
+        }
+    ],
     "dependencies": {
         "@tailwindcss/vite": "^4.0.4",
         "@vitejs/plugin-react": "^4.3.4",
@@ -23,7 +56,9 @@
         "rollup": "^4.34.4",
         "tailwindcss": "^4.0.4",
         "ts-node": "^10.9.2",
-        "vite": "^6.1.0"
+        "tsc": "^2.0.4",
+        "vite": "^6.1.0",
+        "vite-plugin-node-polyfills": "^0.23.0"
     },
     "devDependencies": {
         "@types/autoprefixer": "^10.2.4",
@@ -31,7 +66,7 @@
         "@types/node": "^22.13.1",
         "@types/react": "^19.0.8",
         "@types/react-dom": "^19.0.3",
-        "eslint": "^9.19.0",
+        "eslint": "^8.57.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-prettier": "^5.2.3",
