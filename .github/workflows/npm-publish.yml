@@ -12,7 +12,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  test:
     if: "!startsWith(github.ref, 'refs/tags/')"
     runs-on: ubuntu-latest
 
@@ -37,7 +37,7 @@ jobs:
       - name: Build package
         run: yarn build
 
-  publish-npm:
+  publish-package:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
 
@@ -54,7 +54,10 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Tests, linter and build
+        run: yarn lint && yarn test run && yarn build
+
       - name: Publish to npm
-        run: yarn lint && yarn test run && yarn build && npm publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
