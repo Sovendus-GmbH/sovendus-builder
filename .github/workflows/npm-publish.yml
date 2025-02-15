@@ -54,28 +54,12 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Run Snyk
+        run: snyk monitor --org=${{ secrets.SNYK_ORG_KEY }} --project-name="/github/${{ github.repository }}" --file=yarn.lock
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
       - name: Publish to npm
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  snyk:
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Run Snyk
-        run: snyk test --org=${{ secrets.SNYK_ORG_KEY }}
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
