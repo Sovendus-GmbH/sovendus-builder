@@ -55,7 +55,6 @@
         "commander": "^13.1.0",
         "fs-extra": "^11.3.0",
         "postcss": "^8.5.2",
-        "rollup": "^4.34.7",
         "tailwindcss": "^4.0.6",
         "ts-node": "^10.9.2",
         "vite": "^6.1.0"
