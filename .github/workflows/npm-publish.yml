@@ -27,7 +27,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.yarn/cache
+          path: ~/.cache/yarn
           key: node-cache-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             node-cache-${{ runner.os }}-yarn-
@@ -59,7 +59,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.yarn/cache
+          path: ~/.cache/yarn
           key: node-cache-${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             node-cache-${{ runner.os }}-yarn-
