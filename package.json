@@ -37,7 +37,10 @@
         "build",
         "bundle",
         "vite",
-        "rollup"
+        "rollup",
+        "react",
+        "typescript",
+        "tailwindcss"
     ],
     "author": "Marcus Brandstaetter <techsupport@sovendus.com>",
     "contributors": [

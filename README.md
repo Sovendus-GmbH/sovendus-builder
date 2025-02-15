@@ -1,10 +1,18 @@
-# sovendus-builder
+# Sovendus Builder
 
-## installation
+Sovendus Builder is an all-in-one build/bundle tool based on Vite and Rollup. It is designed to cover all your needs for bundling/compiling vanilla TypeScript, React, and React with Tailwind CSS. This tool is primarily intended for use within Sovendus TypeScript projects, including our Sovendus integration testing browser extension and Sovendus Plugins.
 
-## Example usage
+## Installation
 
-create a file called "sov_build.config.ts" in your project root with the following content
+To install Sovendus Builder, run the following command:
+
+```bash
+npm install sovendus-builder
+```
+
+## Example Configuration
+
+Create a file called `sov_build.config.ts` in your project root with the following content and adjust it based on your needs:
 
 ```ts
 import type { BuildConfig } from "sovendus-builder";
@@ -15,35 +23,53 @@ const config: BuildConfig = {
     {
       input: "./src/input.ts",
       output: "./dist/output.js",
-      type: "vanilla-ts",
+      options: { type: "vanilla-ts" },
     },
     {
       input: "./src/input.tsx",
       output: "./dist/output.js",
-      type: "react",
+      options: { type: "react" },
     },
     {
       input: "./src/input.tsx",
       output: "./dist/output.js",
-      type: "react-tailwind",
+      options: { type: "react-tailwind" },
+    },
+  ],
+  filesOrFoldersToCopy: [
+    {
+      input: "./src/some_file_input.png",
+      output: "./dist/some_target/some_file_input.png",
+    },
+    {
+      input: "./src/some_folder_with_stuff",
+      output: "./dist/some_folder_with_stuff",
     },
   ],
 };
 
 export default config;
-
 ```
 
-## Building from source
+## Example Usage
 
-```bash
-yarn build
+In your `package.json`, you can then build with the following command:
+
+```json
+{
+  "scripts": {
+    "build": "sovendus-builder build"
+  }
+}
 ```
 
-## Publishing
+## Contributing
 
-Use your npmjs account and run
+If you want to contribute or report issues, please follow these steps:
 
-```bash
-npm run release
-```
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Commit your changes and push your branch to your fork.
+4. Create a pull request to the main repository.
+
+See our developer guide here: [Developer Guide](./readme-dev.md)
