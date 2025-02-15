@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import { Command } from "commander";
 import { existsSync, mkdirSync, rmSync, unlinkSync } from "fs";
 import { copy } from "fs-extra";
@@ -59,9 +57,12 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   const plugins: PluginOption[] = pluginsOverride || [];
 
   if (fileConfig.options?.type === "react-tailwind") {
+    const react = (await import("@vitejs/plugin-react")).default;
+    const tailwindcss = (await import("@tailwindcss/vite")).default;
     plugins.push(react());
     plugins.push(tailwindcss());
   } else if (fileConfig.options?.type === "react") {
+    const react = (await import("@vitejs/plugin-react")).default;
     plugins.push(react());
   }
 
