@@ -54,6 +54,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
       - name: Run Snyk
         run: snyk monitor --org=${{ secrets.SNYK_ORG_KEY }} --project-name="/github/${{ github.repository }}" --file=yarn.lock
         env:
