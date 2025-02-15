@@ -1,7 +1,7 @@
 {
     "name": "sovendus-builder",
     "description": "An all-in-one build/bundle tool based on vite and rollup. Build anything from vanilla js to typescript react.",
-    "version": "1.1.9",
+    "version": "1.1.10",
     "main": "dist/build.js",
     "types": "dist/config.d.ts",
     "license": "MIT",
@@ -49,26 +49,24 @@
         }
     ],
     "dependencies": {
-        "@tailwindcss/vite": "^4.0.4",
+        "@tailwindcss/vite": "^4.0.6",
         "@vitejs/plugin-react": "^4.3.4",
         "autoprefixer": "^10.4.20",
         "commander": "^13.1.0",
         "fs-extra": "^11.3.0",
-        "postcss": "^8.5.1",
-        "rollup": "^4.34.4",
-        "tailwindcss": "^4.0.4",
+        "postcss": "^8.5.2",
+        "rollup": "^4.34.7",
+        "tailwindcss": "^4.0.6",
         "ts-node": "^10.9.2",
-        "tsc": "^2.0.4",
-        "vite": "^6.1.0",
-        "vite-plugin-node-polyfills": "^0.23.0"
+        "vite": "^6.1.0"
     },
     "devDependencies": {
         "@types/autoprefixer": "^10.2.4",
         "@types/fs-extra": "^11.0.4",
-        "@types/node": "^22.13.1",
+        "@types/node": "^22.13.4",
         "@types/react": "^19.0.8",
         "@types/react-dom": "^19.0.3",
-        "eslint": "^8.57.0",
+        "eslint": "8.57.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-prettier": "^5.2.3",
@@ -76,12 +74,12 @@
         "eslint-plugin-react-hooks": "5.1.0",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",
-        "prettier": "^3.4.2",
+        "prettier": "^3.5.1",
         "prettier-eslint": "^16.3.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "typescript": "^5.7.3",
-        "typescript-eslint": "^8.23.0",
+        "typescript-eslint": "^8.24.0",
         "vitest": "^3.0.5"
     }
 }

@@ -8,9 +8,8 @@ import { copy } from "fs-extra";
 import { basename, dirname, join, resolve } from "path";
 import type { PluginOption } from "vite";
 import { build } from "vite";
-import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-import type { BuildConfig } from "./config.js";
+import type { BuildConfig, FileToCompile } from "./config.js";
 
 const program = new Command();
 
@@ -29,8 +28,7 @@ program
   });
 
 export async function sovendusBuilder(options: CliOptions): Promise<void> {
-  // eslint-disable-next-line no-console
-  console.log("Sovendus-Builder started");
+  logger("Building started");
   const buildConfig = await getConfigContent(options);
   cleanDistFolders(buildConfig);
   await compileToJsFilesWithVite(buildConfig);
@@ -43,51 +41,56 @@ export async function compileToJsFilesWithVite(
   if (buildConfig.filesToCompile) {
     await Promise.all(
       buildConfig.filesToCompile.map(async (fileConfig) => {
-        if (!existsSync(fileConfig.input)) {
-          throw new Error(`Input file ${fileConfig.input} does not exist`);
-        }
-
-        const plugins: PluginOption[] = [];
-
-        if (fileConfig.options?.type === "react-tailwind") {
-          plugins.push(react());
-          plugins.push(tailwindcss());
-        } else if (fileConfig.options?.type === "react") {
-          plugins.push(react());
-        }
-
-        await build({
-          root: "./",
-          base: "./",
-          plugins,
-          build: {
-            target: "es6",
-            outDir: resolve(fileConfig.output, ".."),
-            minify: false,
-            emptyOutDir: false,
-            cssCodeSplit: true,
-            sourcemap: true,
-            ...fileConfig.options?.buildOptions,
-            rollupOptions: {
-              input: fileConfig.input,
-              output: {
-                entryFileNames: basename(fileConfig.output),
-                assetFileNames: "[name][extname]",
-                exports: "none",
-                format: "iife",
-                ...fileConfig.options.outputOptions,
-              },
-              ...fileConfig.options?.rollupOptions,
-            },
-          },
-          ...fileConfig.options.otherOptions,
-        });
+        await sovendusBuild(fileConfig);
       }),
     );
   } else {
-    // eslint-disable-next-line no-console
-    console.log("No files to compile in your config");
+    logger("No files to compile in your config");
   }
+}
+
+export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
+  const inputFilePath = resolve(process.cwd(), fileConfig.input);
+  if (!existsSync(inputFilePath)) {
+    throw new Error(`Input file ${inputFilePath} does not exist`);
+  }
+  const { plugins: pluginsOverride, ...otherOptions } =
+    fileConfig.options.otherOptions || {};
+  const plugins: PluginOption[] = pluginsOverride || [];
+
+  if (fileConfig.options?.type === "react-tailwind") {
+    plugins.push(react());
+    plugins.push(tailwindcss());
+  } else if (fileConfig.options?.type === "react") {
+    plugins.push(react());
+  }
+
+  await build({
+    root: "./",
+    base: "./",
+    plugins,
+    build: {
+      target: "es6",
+      outDir: resolve(fileConfig.output, ".."),
+      minify: false,
+      emptyOutDir: false,
+      cssCodeSplit: true,
+      sourcemap: true,
+      ...fileConfig.options?.buildOptions,
+      rollupOptions: {
+        input: inputFilePath,
+        output: {
+          entryFileNames: basename(fileConfig.output),
+          assetFileNames: "[name][extname]",
+          exports: "none",
+          format: "iife",
+          ...fileConfig.options.outputOptions,
+        },
+        ...fileConfig.options?.rollupOptions,
+      },
+    },
+    ...otherOptions,
+  });
 }
 
 export async function getConfigContent(
@@ -114,11 +117,7 @@ export async function getCompiledConfigPath(
   const outputFilePath = join(outputDir, outputFileName);
   try {
     await build({
-      plugins: [
-        nodePolyfills({
-          exclude: ["fs"],
-        }),
-      ],
+      plugins: [],
       build: {
         lib: {
           entry: configPath,
@@ -146,11 +145,9 @@ export async function copyFiles(buildConfig: BuildConfig): Promise<void> {
       }
       await copy(fileOrFolderData.input, fileOrFolderData.output);
     }
-    // eslint-disable-next-line no-console
-    console.log("Files copied successfully");
+    logger("Files copied successfully");
   } else {
-    // eslint-disable-next-line no-console
-    console.log("No files to copy in your config");
+    logger("No files to copy in your config");
   }
 }
 
@@ -159,17 +156,20 @@ export function cleanDistFolders(buildConfig: BuildConfig): void {
     buildConfig.foldersToClean.forEach((folder) => {
       try {
         rmSync(folder, { force: true, recursive: true });
-        // eslint-disable-next-line no-console
-        console.log(`Done dist folder cleaning (${folder})`);
+        logger(`Done dist folder cleaning (${folder})`);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
+      } catch (_error) {
         /* empty */
       }
     });
   } else {
-    // eslint-disable-next-line no-console
-    console.log("No folders to clean in your config");
+    logger("No folders to clean in your config");
   }
+}
+
+function logger(message: string): void {
+  // eslint-disable-next-line no-console
+  console.log(`[sovendus-builder] ${message}`);
 }
 
 if (process.env["NODE_ENV"] !== "test") {
