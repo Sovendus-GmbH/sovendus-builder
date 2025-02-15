@@ -27,8 +27,4 @@ yarn lint && yarn test
 
 ## Publishing
 
-To publish the package, use your npmjs account and run:
-
-```bash
-npm run release
-```
+To publish the package, create and push a new version tag on this repository or open a pull request.
