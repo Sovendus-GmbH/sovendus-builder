@@ -11,9 +11,7 @@ tsconfig-build.json
 .vscode/
 .eslintrc.json
 .eslintignore
-.prettier.config.js
+prettier.config.cjs
+vitest.config.ts
 .gitignore
-
-# Ignore other unnecessary files
 .git/
-.gitignore
