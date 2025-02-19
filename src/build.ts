@@ -113,7 +113,7 @@ function cleanCompiledConfig(compiledConfigPath: string): void {
 export async function getCompiledConfigPath(
   configPath: string,
 ): Promise<string> {
-  const outputFileName = `sov_build.config.tmp.${Math.round(Math.random() * 100000)}.js`;
+  const outputFileName = `sov_build.config.tmp.${Math.round(Math.random() * 100000)}.cjs`;
   const outputDir = dirname(configPath);
   const outputFilePath = join(outputDir, outputFileName);
   try {
