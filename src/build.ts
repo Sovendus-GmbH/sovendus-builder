@@ -93,6 +93,7 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
           exports: "none",
           format: "iife",
           ...fileConfig.options.outputOptions,
+          plugins: fileConfig.options.outputOptions?.plugins ?? undefined,
         },
         ...fileConfig.options?.rollupOptions,
       },
