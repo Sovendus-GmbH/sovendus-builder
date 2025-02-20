@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { existsSync, mkdirSync, rmSync, unlinkSync } from "fs";
+import { existsSync, mkdirSync, renameSync, rmSync, unlinkSync } from "fs";
 import { copy } from "fs-extra";
 import { basename, dirname, join, resolve } from "path";
 import type { OutputOptions, RollupOptions } from "rollup";
@@ -125,8 +125,11 @@ export async function getCompiledConfigPath(
   const outputFileName = `sov_build.config.tmp.${Math.round(Math.random() * 100000)}.cjs`;
   const outputDir = dirname(configPath);
   const outputFilePath = join(outputDir, outputFileName);
+  const outputTmpDir = join(outputDir, "tmp");
+  const outputFileTmpPath = join(outputTmpDir, outputFileName);
   try {
     await build({
+      root: outputTmpDir,
       plugins: [],
       build: {
         lib: {
@@ -139,9 +142,11 @@ export async function getCompiledConfigPath(
         sourcemap: false,
       },
     });
+    renameSync(outputFileTmpPath, outputFilePath);
     return outputFilePath;
   } catch (error) {
     // Clean up in case of an error
+    unlinkSync(outputFileTmpPath);
     unlinkSync(outputFilePath);
     throw error;
   }
