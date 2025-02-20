@@ -4,8 +4,9 @@ import { Command } from "commander";
 import { existsSync, mkdirSync, rmSync, unlinkSync } from "fs";
 import { copy } from "fs-extra";
 import { basename, dirname, join, resolve } from "path";
-import type { RollupOptions } from "rollup";
+import type { OutputOptions, RollupOptions } from "rollup";
 import type { PluginOption } from "vite";
+import type { BuildOptions, InlineConfig } from "vite";
 import { build } from "vite";
 
 import type { BuildConfig, FileToCompile } from "./config.js";
@@ -185,3 +186,12 @@ function logger(message: string): void {
 if (process.env["NODE_ENV"] !== "test") {
   program.parse(process.argv);
 }
+
+export {
+  BuildConfig,
+  BuildOptions,
+  FileToCompile,
+  InlineConfig,
+  OutputOptions,
+  RollupOptions,
+};
