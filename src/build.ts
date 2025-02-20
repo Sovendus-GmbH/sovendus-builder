@@ -135,6 +135,7 @@ export async function getCompiledConfigPath(
         },
         outDir: outputDir,
         emptyOutDir: false,
+        sourcemap: false,
       },
     });
     return outputFilePath;
