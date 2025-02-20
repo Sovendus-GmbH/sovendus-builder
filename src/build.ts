@@ -72,6 +72,9 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
     const react = (await import("@vitejs/plugin-react")).default;
     plugins.push(react());
   }
+  if (fileConfig.options?.plugins) {
+    plugins.push(...fileConfig.options.plugins);
+  }
 
   await build({
     root: "./",

@@ -1,5 +1,5 @@
 import type { OutputOptions, RollupOptions } from "rollup";
-import type { BuildOptions, InlineConfig } from "vite";
+import type { BuildOptions, InlineConfig, PluginOption } from "vite";
 
 export interface BuildConfig {
   foldersToClean?: string[];
@@ -18,6 +18,7 @@ export type FileToCompile = {
     buildOptions?: BuildOptions;
     rollupOptions?: RollupOptions;
     otherOptions?: InlineConfig;
+    plugins?: PluginOption[];
     outputOptions?: OutputOptions;
   };
 };
