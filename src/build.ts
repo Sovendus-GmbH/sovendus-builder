@@ -212,5 +212,6 @@ export {
   FileToCompile,
   InlineConfig,
   OutputOptions,
+  PluginOption,
   RollupOptions,
 };
