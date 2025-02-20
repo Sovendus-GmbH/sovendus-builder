@@ -4,6 +4,7 @@ import { Command } from "commander";
 import { existsSync, mkdirSync, rmSync, unlinkSync } from "fs";
 import { copy } from "fs-extra";
 import { basename, dirname, join, resolve } from "path";
+import type { RollupOptions } from "rollup";
 import type { PluginOption } from "vite";
 import { build } from "vite";
 
@@ -55,13 +56,18 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   const { plugins: pluginsOverride, ...otherOptions } =
     fileConfig.options.otherOptions || {};
   const plugins: PluginOption[] = pluginsOverride || [];
-
+  const rollupOptions: RollupOptions = {};
   if (fileConfig.options?.type === "react-tailwind") {
-    const react = (await import("@vitejs/plugin-react")).default;
     const tailwindcss = (await import("@tailwindcss/vite")).default;
-    plugins.push(react());
     plugins.push(tailwindcss());
-  } else if (fileConfig.options?.type === "react") {
+  }
+  if (fileConfig.options?.type?.includes("react")) {
+    rollupOptions.output = {
+      globals: {
+        "react": "React",
+        "react-dom": "ReactDOM",
+      },
+    };
     const react = (await import("@vitejs/plugin-react")).default;
     plugins.push(react());
   }
@@ -79,6 +85,7 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
       sourcemap: true,
       ...fileConfig.options?.buildOptions,
       rollupOptions: {
+        ...rollupOptions,
         input: inputFilePath,
         output: {
           entryFileNames: basename(fileConfig.output),
