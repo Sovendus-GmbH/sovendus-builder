@@ -137,17 +137,28 @@ export async function getCompiledConfigPath(
           formats: ["cjs"],
           fileName: () => outputFileName,
         },
-        outDir: outputDir,
+        outDir: outputTmpDir,
         emptyOutDir: false,
         sourcemap: false,
       },
     });
     renameSync(outputFileTmpPath, outputFilePath);
+    rmSync(outputTmpDir, { force: true, recursive: true });
     return outputFilePath;
   } catch (error) {
     // Clean up in case of an error
-    unlinkSync(outputFileTmpPath);
-    unlinkSync(outputFilePath);
+    try {
+      unlinkSync(outputFileTmpPath);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      /* empty */
+    }
+    try {
+      unlinkSync(outputFilePath);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      /* empty */
+    }
     throw error;
   }
 }
