@@ -85,7 +85,7 @@
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "rollup": "^4.34.8",
-        "sovendus-release-tool": "^1.0.23",
+        "sovendus-release-tool": "^1.0.24",
         "typescript": "^5.7.3",
         "typescript-eslint": "^8.24.0",
         "vitest": "^3.0.5"
