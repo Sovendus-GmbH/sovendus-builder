@@ -29,8 +29,8 @@ beforeEach(() => {
 
   // Mock process.argv with valid commander arguments
   vi.spyOn(process, "argv", "get").mockReturnValue([
-    originalArgv[0],
-    originalArgv[1],
+    originalArgv[0]!,
+    originalArgv[1]!,
     "build",
     "--config",
     "test-config.ts",
