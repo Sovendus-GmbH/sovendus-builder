@@ -22,9 +22,18 @@ yarn build
 To run linting and tests, use:
 
 ```bash
-yarn lint && yarn test
+yarn lint 
+yarn test
 ```
 
 ## Publishing
 
-To publish the package, create and push a new version tag on this repository or open a pull request.
+1. If you have no access to the repository, fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Commit your changes and push your branch to your fork.
+4. Create a pull request to the main repository.
+5. If you have access to the repository, you can publish a new version by running:
+
+    ```bash
+    yarn pub
+    ```
