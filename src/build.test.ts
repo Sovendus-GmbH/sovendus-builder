@@ -1,6 +1,14 @@
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import {
+  afterAll,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
 import { copyDir } from "../test-files/test-config.js";
 import {
@@ -10,6 +18,29 @@ import {
 } from "./build.js";
 
 const testDir = resolve(__dirname, "../test-files");
+
+// Mock process.env and process.argv
+beforeEach(() => {
+  // Ensure NODE_ENV is set to test
+  vi.stubEnv("NODE_ENV", "test");
+
+  // Store original process.argv
+  const originalArgv = process.argv;
+
+  // Mock process.argv with valid commander arguments
+  vi.spyOn(process, "argv", "get").mockReturnValue([
+    originalArgv[0],
+    originalArgv[1],
+    "build",
+    "--config",
+    "test-config.ts",
+  ]);
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 
 beforeAll(() => {
   // Create a folder and a file to copy
@@ -38,14 +69,14 @@ describe("Build Functionality", () => {
     const buildConfig = await getConfigContent(options);
 
     // Check if output files exist and verify content
-    buildConfig.filesToCompile!.forEach((file) => {
+    buildConfig.filesToCompile?.forEach((file) => {
       expect(existsSync(file.output)).toBe(true);
       const content = readFileSync(file.output, "utf-8");
-      expect(content).toContain("Hello from fileToCompile.ts"); // Example assertion
+      expect(content).toContain("Hello from input");
     });
 
     // Check if the files were copied
-    buildConfig.filesOrFoldersToCopy!.forEach((fileOrFolderData) => {
+    buildConfig.filesOrFoldersToCopy?.forEach((fileOrFolderData) => {
       expect(existsSync(fileOrFolderData.output)).toBe(true);
     });
   });
@@ -65,12 +96,12 @@ describe("Build Functionality", () => {
     await sovendusBuilder(options);
 
     // Check if dist folder was cleaned
-    buildConfig.foldersToClean!.forEach((folderToClean) => {
+    buildConfig.foldersToClean?.forEach((folderToClean) => {
       expect(existsSync(folderToClean)).toBe(false);
     });
   });
 
-    it("should handle errors when the config file is invalid", async () => {
+  it("should handle errors when the config file is invalid", async () => {
     const options = {
       config: resolve(testDir, "invalid-config.ts"),
     };

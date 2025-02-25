@@ -1,96 +1,96 @@
 {
-    "name": "sovendus-builder",
-    "description": "An all-in-one build/bundle tool based on vite and rollup. Build anything from vanilla js to typescript react.",
-    "version": "1.1.22",
-    "main": "dist/build.js",
-    "types": "dist/config.d.ts",
-    "license": "MIT",
-    "bin": {
-        "sovendus-builder": "dist/build.js"
+  "name": "sovendus-builder",
+  "description": "An all-in-one build/bundle tool based on vite and rollup. Build anything from vanilla js to typescript react.",
+  "version": "1.1.22",
+  "main": "dist/build.js",
+  "types": "dist/config.d.ts",
+  "license": "MIT",
+  "bin": {
+    "sovendus-builder": "dist/build.js"
+  },
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/build.js",
+      "require": "./dist/build.js"
     },
-    "private": false,
-    "type": "module",
-    "exports": {
-        ".": {
-            "import": "./dist/build.js",
-            "require": "./dist/build.js"
-        },
-        "./src/*": "./src/*",
-        "./dist/*": "./dist/*"
-    },
-    "scripts": {
-        "build": "rm -rf ./dist && tsc -p tsconfig-build.json",
-        "lint": "eslint src --fix",
-        "test": "vitest run",
-        "pub": "sovendus-release-tool"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Sovendus-GmbH/sovendus-builder.git"
-    },
-    "bugs": {
-        "url": "https://github.com/Sovendus-GmbH/sovendus-builder/issues"
-    },
-    "homepage": "https://github.com/Sovendus-GmbH/sovendus-builder#readme",
-    "keywords": [
-        "build",
-        "bundle",
-        "vite",
-        "rollup",
-        "react",
-        "typescript",
-        "tailwindcss"
-    ],
-    "author": "Marcus Brandstaetter <techsupport@sovendus.com>",
-    "contributors": [
-        {
-            "name": "Marcus Brandstaetter - Sovendus GmbH",
-            "email": "techsupport@sovendus.com"
-        }
-    ],
-    "optionalDependencies": {
-        "@tailwindcss/vite": "^4.0.6",
-        "@vitejs/plugin-react": "^4.3.4",
-        "autoprefixer": "^10.4.20",
-        "postcss": "^8.5.2",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "tailwindcss": "^4.0.6",
-        "vite-plugin-css-injected-by-js": "^3.5.2"
-    },
-    "peerDependencies": {
-        "typescript": "^5.7.3"
-    },
-    "dependencies": {
-        "commander": "^13.1.0",
-        "fs-extra": "^11.3.0",
-        "vite": "^6.1.0"
-    },
-    "devDependencies": {
-        "@types/autoprefixer": "^10.2.4",
-        "@types/fs-extra": "^11.0.4",
-        "@types/node": "^22.13.4",
-        "@types/react": "^19.0.8",
-        "@types/react-dom": "^19.0.3",
-        "eslint": "8.57.0",
-        "eslint-config-prettier": "^10.0.1",
-        "eslint-plugin-import": "^2.31.0",
-        "eslint-plugin-prettier": "^5.2.3",
-        "eslint-plugin-react": "7.37.4",
-        "eslint-plugin-react-hooks": "5.1.0",
-        "eslint-plugin-simple-import-sort": "^12.1.1",
-        "eslint-plugin-unused-imports": "^4.1.4",
-        "prettier": "^3.5.1",
-        "prettier-eslint": "^16.3.0",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "rollup": "^4.34.8",
-        "sovendus-release-tool": "^1.0.24",
-        "typescript": "^5.7.3",
-        "typescript-eslint": "^8.24.0",
-        "vitest": "^3.0.5"
-    },
-    "resolutions": {
-        "rollup": "^4.34.8"
+    "./src/*": "./src/*",
+    "./dist/*": "./dist/*"
+  },
+  "scripts": {
+    "build": "rm -rf ./dist && tsc -p tsconfig-build.json",
+    "lint": "eslint src --fix",
+    "test": "vitest run",
+    "pub": "sovendus-release-tool"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sovendus-GmbH/sovendus-builder.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Sovendus-GmbH/sovendus-builder/issues"
+  },
+  "homepage": "https://github.com/Sovendus-GmbH/sovendus-builder#readme",
+  "keywords": [
+    "build",
+    "bundle",
+    "vite",
+    "rollup",
+    "react",
+    "typescript",
+    "tailwindcss"
+  ],
+  "author": "Marcus Brandstaetter <techsupport@sovendus.com>",
+  "contributors": [
+    {
+      "name": "Marcus Brandstaetter - Sovendus GmbH",
+      "email": "techsupport@sovendus.com"
     }
+  ],
+  "optionalDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.6",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "fs-extra": "^11.3.0",
+    "vite": "^6.1.0"
+  },
+  "devDependencies": {
+    "@types/autoprefixer": "^10.2.4",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "eslint": "8.57.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "7.37.4",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier": "^3.5.1",
+    "prettier-eslint": "^16.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rollup": "^4.34.8",
+    "sovendus-release-tool": "^1.0.24",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vitest": "^3.0.5"
+  },
+  "resolutions": {
+    "rollup": "^4.34.8"
+  }
 }
