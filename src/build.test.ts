@@ -1,14 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
-import {
-  afterAll,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { copyDir } from "../test-files/test-config.js";
 import {
@@ -18,29 +10,6 @@ import {
 } from "./build.js";
 
 const testDir = resolve(__dirname, "../test-files");
-
-// Mock process.env and process.argv
-beforeEach(() => {
-  // Ensure NODE_ENV is set to test
-  vi.stubEnv("NODE_ENV", "test");
-
-  // Store original process.argv
-  const originalArgv = process.argv;
-
-  // Mock process.argv with valid commander arguments
-  vi.spyOn(process, "argv", "get").mockReturnValue([
-    originalArgv[0]!,
-    originalArgv[1]!,
-    "build",
-    "--config",
-    "test-config.ts",
-  ]);
-});
-
-afterEach(() => {
-  vi.unstubAllEnvs();
-  vi.restoreAllMocks();
-});
 
 beforeAll(() => {
   // Create a folder and a file to copy
