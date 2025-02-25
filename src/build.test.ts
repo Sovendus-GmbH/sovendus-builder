@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
 import { resolve } from "path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
@@ -29,7 +29,7 @@ afterAll(() => {
 });
 
 describe("Build Functionality", () => {
-  it("should compile files with Vite and clean the dist folder", async () => {
+  it("should compile files with Vite and check output content", async () => {
     const options = {
       config: resolve(testDir, "test-config.ts"),
     };
@@ -37,9 +37,11 @@ describe("Build Functionality", () => {
 
     const buildConfig = await getConfigContent(options);
 
-    // Check if output files exist
+    // Check if output files exist and verify content
     buildConfig.filesToCompile!.forEach((file) => {
       expect(existsSync(file.output)).toBe(true);
+      const content = readFileSync(file.output, "utf-8");
+      expect(content).toContain("Hello from fileToCompile.ts"); // Example assertion
     });
 
     // Check if the files were copied
@@ -66,5 +68,13 @@ describe("Build Functionality", () => {
     buildConfig.foldersToClean!.forEach((folderToClean) => {
       expect(existsSync(folderToClean)).toBe(false);
     });
+  });
+
+    it("should handle errors when the config file is invalid", async () => {
+    const options = {
+      config: resolve(testDir, "invalid-config.ts"),
+    };
+
+    await expect(sovendusBuilder(options)).rejects.toThrowError();
   });
 });
