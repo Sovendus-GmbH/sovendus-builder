@@ -21,7 +21,7 @@
   "scripts": {
     "build": "rm -rf ./dist && tsc -p tsconfig-build.json",
     "lint": "eslint src --fix",
-    "test": "vitest run",
+    "test": "NODE_ENV=test vitest run",
     "pub": "sovendus-release-tool"
   },
   "repository": {
