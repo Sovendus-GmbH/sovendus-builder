@@ -1,7 +1,16 @@
 #!/usr/bin/env node
 
+import archiver from "archiver";
 import { Command } from "commander";
-import { existsSync, mkdirSync, renameSync, rmSync, unlinkSync } from "fs";
+import {
+  createWriteStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  unlinkSync,
+} from "fs";
 import { copy } from "fs-extra";
 import { basename, dirname, join, resolve } from "path";
 import type { OutputOptions, RollupOptions } from "rollup";
@@ -33,6 +42,7 @@ export async function sovendusBuilder(options: CliOptions): Promise<void> {
   cleanDistFolders(buildConfig);
   await compileToJsFilesWithVite(buildConfig);
   await copyFiles(buildConfig);
+  await zipFolders(buildConfig);
 }
 
 export async function compileToJsFilesWithVite(
@@ -186,6 +196,106 @@ export async function copyFiles(buildConfig: BuildConfig): Promise<void> {
   }
 }
 
+export async function zipFolders(buildConfig: BuildConfig): Promise<void> {
+  if (buildConfig.foldersToZip && buildConfig.foldersToZip.length > 0) {
+    logger("Starting to zip folders");
+
+    // Get package version for template replacement
+    let packageVersion = "0.0.0";
+    const packageJsonPath = resolve(process.cwd(), "package.json");
+    try {
+      const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
+        version?: string;
+      };
+      if (!packageJson.version) {
+        throw new Error(`No version in ${packageJsonPath}`);
+      }
+      packageVersion = packageJson.version;
+    } catch (error) {
+      logger("Warning: Could not read package.json version");
+      throw error;
+    }
+
+    for (const zipConfig of buildConfig.foldersToZip) {
+      const inputPath = resolve(process.cwd(), zipConfig.input);
+
+      // Process template variables in output filename
+      let outputFileName = basename(zipConfig.output);
+      outputFileName = outputFileName
+        .replace(/%VERSION%/g, packageVersion)
+        .replace(
+          /%TIMESTAMP%/g,
+          new Date()
+            .toISOString()
+            .replace(/[:.T]/g, "-")
+            .split("-")
+            .slice(0, 6)
+            .join("-"),
+        );
+
+      const outputDir = dirname(resolve(process.cwd(), zipConfig.output));
+      const outputPath = join(outputDir, outputFileName);
+
+      // Ensure output directory exists
+      if (!existsSync(outputDir)) {
+        mkdirSync(outputDir, { recursive: true });
+      }
+
+      if (!existsSync(inputPath)) {
+        throw new Error(`Input folder ${inputPath} does not exist, cannot zip`);
+      }
+
+      try {
+        // Create a file to stream archive data to
+        const output = createWriteStream(outputPath);
+        const archive = archiver("zip", {
+          zlib: { level: 9 }, // Maximum compression level
+        });
+
+        // Listen for all archive data to be written
+        await new Promise<void>((resolve, reject) => {
+          output.on("close", () => {
+            logger(
+              `Successfully zipped ${inputPath} to ${outputPath} (${archive.pointer()} total bytes)`,
+            );
+            resolve();
+          });
+
+          archive.on("warning", (err) => {
+            if (err.code === "ENOENT") {
+              // Log warning
+              logger(`Warning while zipping: ${err.message}`);
+            } else {
+              // Throw error
+              reject(err);
+            }
+          });
+
+          archive.on("error", (err) => {
+            reject(err);
+          });
+
+          // Pipe archive data to the file
+          archive.pipe(output);
+
+          // Add the directory to the archive
+          archive.directory(inputPath, false);
+
+          // Finalize the archive
+          archive.finalize().then(resolve, reject);
+        });
+      } catch (error) {
+        logger(
+          `Error zipping folder ${inputPath}: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+
+    logger("Finished zipping folders");
+  } else {
+    logger("No folders to zip in your config");
+  }
+}
 export function cleanDistFolders(buildConfig: BuildConfig): void {
   if (buildConfig.foldersToClean) {
     buildConfig.foldersToClean.forEach((folder) => {
