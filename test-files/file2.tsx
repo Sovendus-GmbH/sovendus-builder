@@ -1,6 +1,9 @@
 import React, { type JSX } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
-const App = (): JSX.Element => <div>Hello from input3.ts</div>;
+const App = (): JSX.Element => <div>Hello from input2.ts</div>;
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const container = document.getElementById("root");
+const root = createRoot(container!);
+
+root.render(<App />);

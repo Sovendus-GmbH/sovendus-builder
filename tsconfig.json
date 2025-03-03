@@ -5,7 +5,10 @@
     "module": "NodeNext",
     "moduleResolution": "nodenext",
     "skipLibCheck": true,
-    "types": ["node", "jest"],
+    "types": [
+      "node",
+      "jest"
+    ],
     "noEmitOnError": true,
     "removeComments": false,
     "allowJs": false,
@@ -36,5 +39,10 @@
     "suppressImplicitAnyIndexErrors": false,
     "noStrictGenericChecks": false
   },
-  "include": ["src", "test-files"]
+  "include": [
+    "src",
+    "test-files",
+    "vitest.config.ts",
+    "sov_release.config.ts"
+  ]
 }

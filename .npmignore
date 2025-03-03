@@ -9,9 +9,9 @@ test-files/
 tsconfig.json
 tsconfig-build.json
 .vscode/
-.eslintrc.json
-.eslintignore
+eslint.config.mjs
 prettier.config.cjs
 vitest.config.ts
 .gitignore
 .git/
+sov_release.config.ts
