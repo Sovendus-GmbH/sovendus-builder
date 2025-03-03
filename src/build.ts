@@ -98,23 +98,14 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   }
 
   if (fileConfig.options.isPackage) {
-    const dts = (await import("vite-plugin-dts")).default;
-    plugins.push(
-      dts({
-        include: ["src/**/*"],
-        entryRoot: "src",
-      }),
+    await setPackageBuildConfig(
+      plugins,
+      buildOptions,
+      rollupOptions,
+      outputOptions,
+      fileConfig,
+      inputFilePath,
     );
-    buildOptions.lib = {
-      entry: inputFilePath,
-      formats: ["es", "cjs"],
-      fileName: (format): string => `index.${format === "es" ? "mjs" : "cjs"}`,
-    };
-    outputOptions.exports = "auto";
-    const modulesToExternalize = fileConfig.options.modulesToExternalize || [];
-    rollupOptions.external = (id): boolean => {
-      return modulesToExternalize.includes(id) || id.startsWith("node:");
-    };
   } else {
     outputOptions.entryFileNames = basename(fileConfig.output);
     outputOptions.assetFileNames = "[name][extname]";
@@ -144,6 +135,44 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
     },
     ...otherOptions,
   });
+}
+
+async function setPackageBuildConfig(
+  plugins: PluginOption[],
+  buildOptions: BuildOptions,
+  rollupOptions: RollupOptions,
+  outputOptions: OutputOptions,
+  fileConfig: FileToCompile,
+  inputFilePath: string,
+): Promise<void> {
+  const dts = (await import("vite-plugin-dts")).default;
+  plugins.push(
+    dts({
+      include: ["src/**/*"],
+      entryRoot: "src",
+    }),
+  );
+  buildOptions.lib = {
+    entry: inputFilePath,
+    formats: ["es", "cjs"],
+    fileName: (format, entryName): string =>
+      `${entryName}.${format === "es" ? "mjs" : "cjs"}`,
+  };
+  outputOptions.exports = "auto";
+  const modulesToExternalize = Array.from(
+    new Set([
+      ...(fileConfig.options.modulesToExternalize || []),
+      ...(fileConfig.options?.type?.includes("react")
+        ? ["react", "react-dom"]
+        : []),
+    ]),
+  );
+  if (fileConfig.options?.type?.includes("react")) {
+    modulesToExternalize.push("react", "react-dom");
+  }
+  rollupOptions.external = (id): boolean => {
+    return modulesToExternalize.includes(id) || id.startsWith("node:");
+  };
 }
 
 export async function getConfigContent(
