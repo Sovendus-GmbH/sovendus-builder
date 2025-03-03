@@ -152,11 +152,17 @@ async function setPackageBuildConfig(
       entryRoot: "src",
     }),
   );
+  const outPutFilesNameWithoutExtension = basename(fileConfig.output).split(
+    ".",
+  )[0];
+  if (!outPutFilesNameWithoutExtension) {
+    throw new Error("Output file name is invalid");
+  }
   buildOptions.lib = {
     entry: inputFilePath,
     formats: ["es", "cjs"],
-    fileName: (format, entryName): string =>
-      `${entryName}.${format === "es" ? "mjs" : "cjs"}`,
+    fileName: (format): string =>
+      `${outPutFilesNameWithoutExtension}.${format === "es" ? "mjs" : "cjs"}`,
   };
   outputOptions.exports = "auto";
   const modulesToExternalize = Array.from(
