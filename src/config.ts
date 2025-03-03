@@ -19,6 +19,8 @@ export type FileToCompile = {
   output: string;
   options: {
     type: "react-tailwind" | "react" | "vanilla";
+    isPackage?: boolean;
+    modulesToExternalize?: string[];
     buildOptions?: BuildOptions;
     rollupOptions?: RollupOptions;
     otherOptions?: InlineConfig;

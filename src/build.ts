@@ -67,7 +67,19 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   const { plugins: pluginsOverride, ...otherOptions } =
     fileConfig.options.otherOptions || {};
   const plugins: PluginOption[] = pluginsOverride || [];
+  const buildOptions: BuildOptions = {
+    target: "es6",
+    outDir: resolve(fileConfig.output, ".."),
+    minify: false,
+    emptyOutDir: false,
+    cssCodeSplit: false,
+    cssMinify: false,
+    sourcemap: true,
+  };
   const rollupOptions: RollupOptions = {};
+
+  const outputOptions: OutputOptions = {};
+
   if (fileConfig.options?.type === "react-tailwind") {
     const tailwindcss = (await import("@tailwindcss/vite")).default;
     plugins.push(tailwindcss());
@@ -77,40 +89,53 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
     plugins.push(cssInjectedByJsPlugin());
   }
   if (fileConfig.options?.type?.includes("react")) {
-    rollupOptions.output = {
-      globals: {
-        "react": "React",
-        "react-dom": "ReactDOM",
-      },
+    outputOptions.globals = {
+      "react": "React",
+      "react-dom": "ReactDOM",
     };
     const react = (await import("@vitejs/plugin-react")).default;
     plugins.push(react());
   }
-  if (fileConfig.options?.plugins) {
-    plugins.push(...fileConfig.options.plugins);
+
+  if (fileConfig.options.isPackage) {
+    const dts = (await import("vite-plugin-dts")).default;
+    plugins.push(
+      dts({
+        include: ["src/**/*"],
+        entryRoot: "src",
+      }),
+    );
+    buildOptions.lib = {
+      entry: inputFilePath,
+      formats: ["es", "cjs"],
+      fileName: (format): string => `index.${format === "es" ? "mjs" : "cjs"}`,
+    };
+    outputOptions.exports = "auto";
+    const modulesToExternalize = fileConfig.options.modulesToExternalize || [];
+    rollupOptions.external = (id): boolean => {
+      return modulesToExternalize.includes(id) || id.startsWith("node:");
+    };
+  } else {
+    outputOptions.entryFileNames = basename(fileConfig.output);
+    outputOptions.assetFileNames = "[name][extname]";
+    outputOptions.exports = "none";
+    outputOptions.format = "iife";
+    rollupOptions.input = inputFilePath;
   }
 
   await build({
     root: "./",
     base: "./",
-    plugins,
+    plugins: Array.from(
+      new Set([...plugins, ...(fileConfig.options.plugins || [])]),
+    ),
     build: {
-      target: "es6",
-      outDir: resolve(fileConfig.output, ".."),
-      minify: false,
-      emptyOutDir: false,
-      cssCodeSplit: false,
-      cssMinify: false,
-      sourcemap: true,
+      ...buildOptions,
       ...fileConfig.options?.buildOptions,
       rollupOptions: {
         ...rollupOptions,
-        input: inputFilePath,
         output: {
-          entryFileNames: basename(fileConfig.output),
-          assetFileNames: "[name][extname]",
-          exports: "none",
-          format: "iife",
+          ...outputOptions,
           ...fileConfig.options.outputOptions,
           plugins: fileConfig.options.outputOptions?.plugins ?? undefined,
         },
