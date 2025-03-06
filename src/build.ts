@@ -168,7 +168,8 @@ async function setPackageBuildConfig(
   const modulesToExternalize = Array.from(
     new Set([
       ...(fileConfig.options.modulesToExternalize || []),
-      ...(fileConfig.options?.type?.includes("react")
+      ...(fileConfig.options?.type?.includes("react") &&
+      fileConfig.options?.bundleReact
         ? ["react", "react-dom"]
         : []),
     ]),

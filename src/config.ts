@@ -20,6 +20,7 @@ export type FileToCompile = {
   options: {
     type: "react-tailwind" | "react" | "vanilla";
     isPackage?: boolean;
+    bundleReact?: boolean;
     modulesToExternalize?: string[];
     buildOptions?: BuildOptions;
     rollupOptions?: RollupOptions;
