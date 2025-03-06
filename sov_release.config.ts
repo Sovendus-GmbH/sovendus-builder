@@ -7,6 +7,8 @@ const releaseConfig: ReleaseConfig = {
       updateDeps: true,
       version: "1.2.3",
       release: true,
+      lintAndBuild: true,
+      test: true,
       releaseOptions: {
         foldersToScanAndBumpThisPackage: [
           // scan whole dev env
