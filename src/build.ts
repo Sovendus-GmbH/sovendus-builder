@@ -262,26 +262,32 @@ export async function zipFolders(buildConfig: BuildConfig): Promise<void> {
 
     // Get package version for template replacement
     let packageVersion = "0.0.0";
+    let packageName = "";
     const packageJsonPath = resolve(process.cwd(), "package.json");
     try {
       const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8")) as {
         version?: string;
+        name?: string;
       };
       if (!packageJson.version) {
         throw new Error(`No version in ${packageJsonPath}`);
       }
       packageVersion = packageJson.version;
+      if (!packageJson.name) {
+        throw new Error(`No name in ${packageJsonPath}`);
+      }
+      packageName = packageJson.name;
     } catch (error) {
       logger("Warning: Could not read package.json version");
       throw error;
     }
-
     for (const zipConfig of buildConfig.foldersToZip) {
       const inputPath = resolve(process.cwd(), zipConfig.input);
 
       // Process template variables in output filename
       let outputFileName = basename(zipConfig.output);
       outputFileName = outputFileName
+        .replace(/%NAME%/g, packageName)
         .replace(/%VERSION%/g, packageVersion)
         .replace(
           /%TIMESTAMP%/g,
