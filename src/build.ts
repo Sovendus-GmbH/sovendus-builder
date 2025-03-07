@@ -18,7 +18,7 @@ import type { PluginOption } from "vite";
 import type { BuildOptions, InlineConfig } from "vite";
 import { build } from "vite";
 
-import type { BuildConfig, FileToCompile } from "./config.js";
+import type { BuildConfig, FileToCompile, PackageConfig } from "./config.js";
 
 const program = new Command();
 
@@ -96,16 +96,17 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
     const react = (await import("@vitejs/plugin-react")).default;
     plugins.push(react());
   }
-
-  if (fileConfig.options.isPackage) {
-    await setPackageBuildConfig(
+  const packageConfig = fileConfig.options.packageConfig;
+  if (packageConfig?.isPackage) {
+    await setPackageBuildConfig({
       plugins,
       buildOptions,
       rollupOptions,
       outputOptions,
       fileConfig,
       inputFilePath,
-    );
+      packageConfig,
+    });
   } else {
     outputOptions.entryFileNames = basename(fileConfig.output);
     outputOptions.assetFileNames = "[name][extname]";
@@ -137,19 +138,28 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   });
 }
 
-async function setPackageBuildConfig(
-  plugins: PluginOption[],
-  buildOptions: BuildOptions,
-  rollupOptions: RollupOptions,
-  outputOptions: OutputOptions,
-  fileConfig: FileToCompile,
-  inputFilePath: string,
-): Promise<void> {
+async function setPackageBuildConfig({
+  plugins,
+  buildOptions,
+  rollupOptions,
+  outputOptions,
+  fileConfig,
+  inputFilePath,
+  packageConfig,
+}: {
+  plugins: PluginOption[];
+  buildOptions: BuildOptions;
+  rollupOptions: RollupOptions;
+  outputOptions: OutputOptions;
+  fileConfig: FileToCompile;
+  inputFilePath: string;
+  packageConfig: PackageConfig;
+}): Promise<void> {
   const dts = (await import("vite-plugin-dts")).default;
   plugins.push(
     dts({
-      include: ["src/**/*"],
-      entryRoot: "src",
+      include: packageConfig.dtsInclude,
+      entryRoot: packageConfig.dtsEntryRoot,
     }),
   );
   const outPutFilesNameWithoutExtension = basename(fileConfig.output).split(

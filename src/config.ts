@@ -14,12 +14,18 @@ export interface BuildConfig {
   }[];
 }
 
+export interface PackageConfig {
+  isPackage: true;
+  dtsInclude: string[];
+  dtsEntryRoot: string;
+}
+
 export type FileToCompile = {
   input: string;
   output: string;
   options: {
     type: "react-tailwind" | "react" | "vanilla";
-    isPackage?: boolean;
+    packageConfig?: PackageConfig;
     bundleReact?: boolean;
     modulesToExternalize?: string[];
     buildOptions?: BuildOptions;
