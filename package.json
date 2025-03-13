@@ -94,6 +94,7 @@
   },
   "resolutions": {
     "rollup": "4.34.9",
-    "typescript": "5.8.2"
+    "typescript": "5.8.2",
+    "@babel/helpers": "7.26.10"
   }
 }
