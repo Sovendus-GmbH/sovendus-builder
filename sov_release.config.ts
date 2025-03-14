@@ -9,7 +9,7 @@ const releaseConfig: ReleaseConfig = {
       build: true,
       test: true,
       release: {
-        version: "1.3.3",
+        version: "1.3.4",
         foldersToScanAndBumpThisPackage: [
           // scan whole dev env
           { folder: "../../" },
