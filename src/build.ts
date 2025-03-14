@@ -218,6 +218,7 @@ export async function getCompiledConfigPath(
   const outputFileTmpPath = join(outputTmpDir, outputFileName);
   try {
     await build({
+      logLevel: "silent",
       root: outputTmpDir,
       plugins: [],
       build: {
