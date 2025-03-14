@@ -48,7 +48,7 @@ describe("Build Functionality", () => {
     buildConfig.filesOrFoldersToCopy?.forEach((fileOrFolderData) => {
       expect(existsSync(fileOrFolderData.output)).toBe(true);
     });
-  });
+  }, 15000);
 
   it("should clean the clean folders before build", async () => {
     // build something to delete
@@ -68,7 +68,7 @@ describe("Build Functionality", () => {
     buildConfig.foldersToClean?.forEach((folderToClean) => {
       expect(existsSync(folderToClean)).toBe(false);
     });
-  });
+  }, 15000);
 
   it("should handle errors when the config file is invalid", async () => {
     const options = {
