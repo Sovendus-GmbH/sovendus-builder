@@ -22,6 +22,7 @@ const baseConfig = [
   },
 
   {
+    files: ["**/*.ts", "**/*.tsx"],
     plugins: {
       "@typescript-eslint": ts,
     },

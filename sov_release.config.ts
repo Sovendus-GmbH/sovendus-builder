@@ -5,14 +5,14 @@ const releaseConfig: ReleaseConfig = {
     {
       directory: "./",
       updateDeps: true,
-      version: "1.3.2",
-      release: true,
-      lintAndBuild: true,
+      lint: true,
+      build: true,
       test: true,
-      releaseOptions: {
+      release: {
+        version: "1.3.2",
         foldersToScanAndBumpThisPackage: [
           // scan whole dev env
-          { folder: "../../../../" },
+          { folder: "../../" },
         ],
       },
     },
