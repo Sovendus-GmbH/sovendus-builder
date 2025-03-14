@@ -25,6 +25,17 @@ jobs:
         with:
           node-version: 20
 
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-
+
       - name: Install dependencies
         run: yarn install
 
@@ -51,8 +62,28 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
 
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-
+
       - name: Install dependencies
         run: yarn install
+
+      - name: Run linter
+        run: yarn lint
+
+      - name: Run tests
+        run: yarn test
+
+      - name: Build package
+        run: yarn build
 
       - name: Install Snyk CLI
         run: npm install -g snyk
@@ -63,9 +94,6 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Publish to npm
-        run: |
-          yarn install
-          yarn build
-          npm publish
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
