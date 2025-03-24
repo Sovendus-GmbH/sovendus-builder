@@ -99,7 +99,7 @@
     "vitest": "3.0.9"
   },
   "resolutions": {
-    "rollup": "4.35.0",
+    "rollup": "4.37.0",
     "typescript": "5.8.2",
     "@babel/helpers": "7.26.10"
   }

@@ -397,6 +397,7 @@ function logger(message: string): void {
   console.log(`[sovendus-builder] ${message}`);
 }
 
+// eslint-disable-next-line node/no-process-env
 if (process.env["NODE_ENV"] !== "test") {
   program.parse(process.argv);
 }
