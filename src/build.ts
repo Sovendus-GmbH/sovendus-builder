@@ -83,10 +83,12 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   if (fileConfig.options?.type === "react-tailwind") {
     const tailwindcss = (await import("@tailwindcss/vite")).default;
     plugins.push(tailwindcss());
-    const cssInjectedByJsPlugin = (
-      await import("vite-plugin-css-injected-by-js")
-    ).default;
-    plugins.push(cssInjectedByJsPlugin());
+    if (fileConfig.options.inlineCss !== false) {
+      const cssInjectedByJsPlugin = (
+        await import("vite-plugin-css-injected-by-js")
+      ).default;
+      plugins.push(cssInjectedByJsPlugin());
+    }
   }
   if (fileConfig.options?.type?.includes("react")) {
     outputOptions.globals = {
