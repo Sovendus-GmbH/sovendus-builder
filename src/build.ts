@@ -72,7 +72,7 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
     outDir: resolve(fileConfig.output, ".."),
     minify: false,
     emptyOutDir: false,
-    cssCodeSplit: false,
+    cssCodeSplit: !fileConfig.options.inlineCss,
     cssMinify: false,
     sourcemap: true,
   };
