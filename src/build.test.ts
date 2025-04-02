@@ -39,8 +39,8 @@ describe("Build Functionality", () => {
 
     // Check if output files exist and verify content
     buildConfig.filesToCompile?.forEach((file) => {
-      expect(existsSync(file.output)).toBe(true);
-      const content = readFileSync(file.output, "utf-8");
+      expect(existsSync(file.sovOptions.output)).toBe(true);
+      const content = readFileSync(file.sovOptions.output, "utf-8");
       expect(content).toContain("Hello from input");
     });
 

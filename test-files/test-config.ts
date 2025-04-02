@@ -8,19 +8,25 @@ const buildConfig: BuildConfig = {
   foldersToClean: [distDir],
   filesToCompile: [
     {
-      input: `${testDir}/file1.ts`,
-      output: `${distDir}/output1.js`,
-      options: { type: "vanilla" },
+      sovOptions: {
+        input: `${testDir}/file1.ts`,
+        output: `${distDir}/output1.js`,
+        type: "vanilla",
+      },
     },
     {
-      input: `${testDir}/file2.tsx`,
-      output: `${distDir}/output2.js`,
-      options: { type: "react" },
+      sovOptions: {
+        input: `${testDir}/file2.tsx`,
+        output: `${distDir}/output2.js`,
+        type: "react",
+      },
     },
     {
-      input: `${testDir}/file3.tsx`,
-      output: `${distDir}/output3.js`,
-      options: { type: "react-tailwind" },
+      sovOptions: {
+        input: `${testDir}/file3.tsx`,
+        output: `${distDir}/output3.js`,
+        type: "react-tailwind",
+      },
     },
   ],
   filesOrFoldersToCopy: [
