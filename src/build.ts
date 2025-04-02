@@ -60,37 +60,45 @@ export async function compileToJsFilesWithVite(
 }
 
 export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
-  const inputFilePath = resolve(process.cwd(), fileConfig.input);
+  const inputFilePath = resolve(process.cwd(), fileConfig.sovOptions.input);
   if (!existsSync(inputFilePath)) {
     throw new Error(`Input file ${inputFilePath} does not exist`);
   }
-  const { plugins: pluginsOverride, ...otherOptions } =
-    fileConfig.options.otherOptions || {};
+  const {
+    plugins: pluginsOverride,
+    build: {
+      rollupOptions: { output: outputOverride, ...rollupOptionsOverride } = {},
+      ...buildOptionsOverride
+    } = {},
+    ...otherOptions
+  } = fileConfig.viteOptions || {};
+
   const plugins: PluginOption[] = pluginsOverride || [];
   const buildOptions: BuildOptions = {
     target: "es6",
-    outDir: resolve(fileConfig.output, ".."),
+    outDir: resolve(fileConfig.sovOptions.output, ".."),
     minify: false,
     emptyOutDir: false,
-    cssCodeSplit: !fileConfig.options.inlineCss,
+    cssCodeSplit: !fileConfig.sovOptions.inlineCss,
     cssMinify: false,
     sourcemap: true,
+    ...buildOptionsOverride,
   };
   const rollupOptions: RollupOptions = {};
 
   const outputOptions: OutputOptions = {};
 
-  if (fileConfig.options?.type === "react-tailwind") {
+  if (fileConfig.sovOptions?.type === "react-tailwind") {
     const tailwindcss = (await import("@tailwindcss/vite")).default;
     plugins.push(tailwindcss());
-    if (fileConfig.options.inlineCss !== false) {
+    if (fileConfig.sovOptions.inlineCss !== false) {
       const cssInjectedByJsPlugin = (
         await import("vite-plugin-css-injected-by-js")
       ).default;
       plugins.push(cssInjectedByJsPlugin());
     }
   }
-  if (fileConfig.options?.type?.includes("react")) {
+  if (fileConfig.sovOptions?.type?.includes("react")) {
     outputOptions.globals = {
       "react": "React",
       "react-dom": "ReactDOM",
@@ -98,7 +106,7 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
     const react = (await import("@vitejs/plugin-react")).default;
     plugins.push(react());
   }
-  const packageConfig = fileConfig.options.packageConfig;
+  const packageConfig = fileConfig.sovOptions.packageConfig;
   if (packageConfig?.isPackage) {
     await setPackageBuildConfig({
       plugins,
@@ -110,7 +118,7 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
       packageConfig,
     });
   } else {
-    outputOptions.entryFileNames = basename(fileConfig.output);
+    outputOptions.entryFileNames = basename(fileConfig.sovOptions.output);
     outputOptions.assetFileNames = "[name][extname]";
     outputOptions.exports = "none";
     outputOptions.format = "iife";
@@ -120,23 +128,19 @@ export async function sovendusBuild(fileConfig: FileToCompile): Promise<void> {
   await build({
     root: "./",
     base: "./",
-    plugins: Array.from(
-      new Set([...plugins, ...(fileConfig.options.plugins || [])]),
-    ),
+    plugins: Array.from(new Set(plugins)),
+    ...otherOptions,
     build: {
       ...buildOptions,
-      ...fileConfig.options?.buildOptions,
       rollupOptions: {
         ...rollupOptions,
+        ...rollupOptionsOverride,
         output: {
           ...outputOptions,
-          ...fileConfig.options.outputOptions,
-          plugins: fileConfig.options.outputOptions?.plugins ?? undefined,
+          ...outputOverride,
         },
-        ...fileConfig.options?.rollupOptions,
       },
     },
-    ...otherOptions,
   });
 }
 
@@ -164,9 +168,9 @@ async function setPackageBuildConfig({
       entryRoot: packageConfig.dtsEntryRoot,
     }),
   );
-  const outPutFilesNameWithoutExtension = basename(fileConfig.output).split(
-    ".",
-  )[0];
+  const outPutFilesNameWithoutExtension = basename(
+    fileConfig.sovOptions.output,
+  ).split(".")[0];
   if (!outPutFilesNameWithoutExtension) {
     throw new Error("Output file name is invalid");
   }
@@ -179,14 +183,14 @@ async function setPackageBuildConfig({
   outputOptions.exports = "auto";
   const modulesToExternalize = Array.from(
     new Set([
-      ...(fileConfig.options.modulesToExternalize || []),
-      ...(fileConfig.options?.type?.includes("react") &&
-      fileConfig.options?.bundleReact
+      ...(fileConfig.sovOptions.modulesToExternalize || []),
+      ...(fileConfig.sovOptions?.type?.includes("react") &&
+      fileConfig.sovOptions?.bundleReact
         ? ["react", "react-dom"]
         : []),
     ]),
   );
-  if (fileConfig.options?.type?.includes("react")) {
+  if (fileConfig.sovOptions?.type?.includes("react")) {
     modulesToExternalize.push("react", "react-dom");
   }
   rollupOptions.external = (id): boolean => {

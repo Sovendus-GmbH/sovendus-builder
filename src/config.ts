@@ -1,5 +1,4 @@
-import type { OutputOptions, RollupOptions } from "rollup";
-import type { BuildOptions, InlineConfig, PluginOption } from "vite";
+import type { InlineConfig } from "vite";
 
 export interface BuildConfig {
   foldersToClean?: string[];
@@ -21,18 +20,14 @@ export interface PackageConfig {
 }
 
 export type FileToCompile = {
-  input: string;
-  output: string;
-  options: {
+  sovOptions: {
+    input: string;
+    output: string;
     type: "react-tailwind" | "react" | "vanilla";
     inlineCss?: boolean;
     packageConfig?: PackageConfig;
     bundleReact?: boolean;
     modulesToExternalize?: string[];
-    buildOptions?: BuildOptions;
-    rollupOptions?: RollupOptions;
-    otherOptions?: InlineConfig;
-    plugins?: PluginOption[];
-    outputOptions?: OutputOptions;
   };
+  viteOptions?: InlineConfig;
 };
