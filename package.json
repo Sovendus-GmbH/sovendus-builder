@@ -1,7 +1,7 @@
 {
   "name": "sovendus-builder",
   "description": "An all-in-one build/bundle tool based on vite and rollup. Build anything from vanilla js to typescript react.",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "main": "dist/build.js",
   "types": "dist/config.d.ts",
   "license": "MIT",
