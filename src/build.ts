@@ -186,13 +186,11 @@ async function setPackageBuildConfig({
       ...(fileConfig.sovOptions.modulesToExternalize || []),
       ...(fileConfig.sovOptions?.type?.includes("react") &&
       fileConfig.sovOptions?.bundleReact
-        ? ["react", "react-dom"]
+        ? ["react", "react-dom", "react/jsx-runtime"]
         : []),
     ]),
   );
-  if (fileConfig.sovOptions?.type?.includes("react")) {
-    modulesToExternalize.push("react", "react-dom");
-  }
+
   rollupOptions.external = (id): boolean => {
     return modulesToExternalize.includes(id) || id.startsWith("node:");
   };
