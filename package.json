@@ -49,13 +49,13 @@
     }
   ],
   "optionalDependencies": {
-    "@tailwindcss/vite": "4.1.1",
+    "@tailwindcss/vite": "4.1.3",
     "@vitejs/plugin-react": "4.3.4",
     "autoprefixer": "10.4.21",
     "postcss": "8.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "tailwindcss": "4.1.1",
+    "tailwindcss": "4.1.3",
     "vite-plugin-css-injected-by-js": "3.5.2"
   },
   "peerDependencies": {
@@ -66,24 +66,24 @@
     "commander": "13.1.0",
     "vite-plugin-dts": "4.5.3",
     "fs-extra": "11.3.0",
-    "vite": "6.2.4"
+    "vite": "6.2.5"
   },
   "devDependencies": {
     "@types/archiver": "6.0.3",
     "@types/autoprefixer": "10.2.4",
     "@types/fs-extra": "11.0.4",
-    "@types/node": "22.13.17",
+    "@types/node": "22.14.0",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "@types/eslint": "9.6.1",
     "@typescript-eslint/eslint-plugin": "8.29.0",
     "@typescript-eslint/parser": "8.29.0",
-    "eslint": "9.23.0",
+    "eslint": "9.24.0",
     "eslint-config-prettier": "10.1.1",
-    "eslint-import-resolver-typescript": "4.3.1",
+    "eslint-import-resolver-typescript": "4.3.2",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "5.2.5",
+    "eslint-plugin-prettier": "5.2.6",
     "eslint-plugin-react-compiler": "19.0.0-beta-e993439-20250328",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-simple-import-sort": "12.1.1",
@@ -93,8 +93,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "rollup": "4.39.0",
-    "sovendus-release-tool": "1.4.2",
-    "typescript": "5.8.2",
+    "sovendus-release-tool": "1.4.3",
+    "typescript": "5.8.3",
     "typescript-eslint": "8.29.0",
     "vitest": "3.1.1"
   },
