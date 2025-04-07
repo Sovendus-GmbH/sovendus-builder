@@ -185,7 +185,7 @@ async function setPackageBuildConfig({
     new Set([
       ...(fileConfig.sovOptions.modulesToExternalize || []),
       ...(fileConfig.sovOptions?.type?.includes("react") &&
-      fileConfig.sovOptions?.bundleReact
+      fileConfig.sovOptions?.bundleReact !== false
         ? ["react", "react-dom", "react/jsx-runtime"]
         : []),
     ]),
