@@ -3555,10 +3555,10 @@ normalize-range@^0.1.2:
   resolved "https://registry.yarnpkg.com/normalize-range/-/normalize-range-0.1.2.tgz#2d10c06bdfd312ea9777695a4d28439456b75942"
   integrity sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==
 
-npm-check-updates@17.1.16:
-  version "17.1.16"
-  resolved "https://registry.yarnpkg.com/npm-check-updates/-/npm-check-updates-17.1.16.tgz#28f5debfb81b29bf152162de810beb526b638226"
-  integrity sha512-9nohkfjLRzLfsLVGbO34eXBejvrOOTuw5tvNammH73KEFG5XlFoi3G2TgjTExHtnrKWCbZ+mTT+dbNeSjASIPw==
+npm-check-updates@17.1.18:
+  version "17.1.18"
+  resolved "https://registry.yarnpkg.com/npm-check-updates/-/npm-check-updates-17.1.18.tgz#b26e5a6bb5f2b32af5950cda7ea40aafaf92e2cc"
+  integrity sha512-bkUy2g4v1i+3FeUf5fXMLbxmV95eG4/sS7lYE32GrUeVgQRfQEk39gpskksFunyaxQgTIdrvYbnuNbO/pSUSqw==
 
 object-inspect@^1.13.3:
   version "1.13.3"
@@ -3908,7 +3908,7 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
-rollup@4.40.0, rollup@^4.23.0, rollup@^4.30.1, rollup@^4.34.9:
+rollup@4.40.0, rollup@^4.23.0, rollup@^4.34.9:
   version "4.40.0"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-4.40.0.tgz#13742a615f423ccba457554f006873d5a4de1920"
   integrity sha512-Noe455xmA96nnqH5piFtLobsGbCij7Tu+tb3c1vYjNbTkfzGqXqQXG3wJaYXkRZuQ0vEYN4bhwg7QnIrqB5B+w==
@@ -4124,15 +4124,15 @@ source-map@~0.6.1:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.6.1.tgz#74722af32e9614e9c287a8d0bbde48b5e2f1a263"
   integrity sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==
 
-sovendus-release-tool@1.4.4:
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/sovendus-release-tool/-/sovendus-release-tool-1.4.4.tgz#bb86b046ca99de8fff6a790d6b0104cddcd584d7"
-  integrity sha512-fz5gteigjnxVTSKPZeHKzyWrjR/5EqsZGptk06ZKR5vJcdEv75dMJpp73QHrxnEVbPF5o9gObyVA4KiEkMM26g==
+sovendus-release-tool@1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/sovendus-release-tool/-/sovendus-release-tool-1.4.6.tgz#c09ec9f023e49dc308ef994a45d9da8459770f33"
+  integrity sha512-Mi2eAni1CsZvj8wxlg4ZO/EqpH//oAHD/DJXMvF7doFcEUKufrxQtFMumglFOMWst8J39Gr2HQmS2C1Qqs6UwA==
   dependencies:
     commander "13.1.0"
     inquirer "^12.5.2"
-    npm-check-updates "17.1.16"
-    vite "^6.2.5"
+    npm-check-updates "17.1.18"
+    vite "^6.3.0"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
@@ -4566,7 +4566,7 @@ vite-plugin-dts@4.5.3:
     local-pkg "^1.0.0"
     magic-string "^0.30.17"
 
-vite@6.3.0:
+vite@6.3.0, vite@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/vite/-/vite-6.3.0.tgz#17c86b3a0f4d20b210fe89f22f7b27d5926fcce5"
   integrity sha512-9aC0n4pr6hIbvi1YOpFjwQ+QOTGssvbJKoeYkuHHGWwlXfdxQlI8L2qNMo9awEEcCPSiS+5mJZk5jH1PAqoDeQ==
@@ -4588,17 +4588,6 @@ vite@6.3.0:
     esbuild "^0.24.2"
     postcss "^8.4.49"
     rollup "^4.23.0"
-  optionalDependencies:
-    fsevents "~2.3.3"
-
-vite@^6.2.5:
-  version "6.2.5"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.2.5.tgz#d093b5fe8eb96e594761584a966ab13f24457820"
-  integrity sha512-j023J/hCAa4pRIUH6J9HemwYfjB5llR2Ps0CWeikOtdR8+pAURAk0DoJC5/mm9kd+UgdnIy7d6HE4EAvlYhPhA==
-  dependencies:
-    esbuild "^0.25.0"
-    postcss "^8.5.3"
-    rollup "^4.30.1"
   optionalDependencies:
     fsevents "~2.3.3"
 
