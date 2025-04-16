@@ -92,15 +92,14 @@
     "prettier-plugin-sort-json": "4.1.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "rollup": "4.40.0",
     "sovendus-release-tool": "1.4.4",
     "typescript": "5.8.3",
     "typescript-eslint": "8.30.1",
     "vitest": "3.1.1"
   },
   "resolutions": {
-    "rollup": "4.39.0",
-    "typescript": "5.8.2",
+    "rollup": "4.40.0",
+    "typescript": "5.8.3",
     "@babel/helpers": "7.26.10"
   }
 }
