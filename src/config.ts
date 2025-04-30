@@ -7,10 +7,6 @@ export interface BuildConfig {
     input: string;
     output: string;
   }[];
-  foldersToZip?: {
-    input: string;
-    output: string;
-  }[];
 }
 
 export interface PackageConfig {
